@@ -1,26 +1,21 @@
-// Collapsible
-var coll = document.getElementsByClassName("collapsible");
-
-for (let i = 0; i < coll.length; i++) {
-    coll[i].addEventListener("click", function () {
-        this.classList.toggle("active");
-
-        var content = this.nextElementSibling;
-
-        if (content.style.maxHeight) {
-            content.style.maxHeight = null;
-        } else {
-            content.style.maxHeight = content.scrollHeight + "px";
-        }
-
-    });
+// Collapsible Chat Widget Toggle
+function toggleChat() {
+    const widget = document.getElementById("chat-widget");
+    const icon = document.getElementById("toggle-icon");
+    
+    widget.classList.toggle("closed");
+    if (widget.classList.contains("closed")) {
+        icon.innerHTML = '<i class="fa fa-chevron-up"></i>';
+    } else {
+        icon.innerHTML = '<i class="fa fa-chevron-down"></i>';
+    }
 }
 
-//Time
+// Time Helper Function (Fixed implicit global variables)
 function getTime() {
     let today = new Date();
-    hours = today.getHours();
-    minutes = today.getMinutes();
+    let hours = today.getHours();
+    let minutes = today.getMinutes();
 
     if (hours < 10) {
         hours = "0" + hours;
@@ -34,61 +29,98 @@ function getTime() {
     return time;
 }
 
-//First message
+// Scroll to bottom helper
+function scrollToBottom() {
+    const chatScroll = document.getElementById("chat-scroll");
+    if (chatScroll) {
+        chatScroll.scrollTop = chatScroll.scrollHeight;
+    }
+}
+
+// First Bot Message Initialization
 function firstBotMessage() {
-    let firstMessage = "Hi! How can I help?"
-    document.getElementById("botStarterMessage").innerHTML = '<p class="botText"><span>' + firstMessage + '</span></p>';
-
-    let time = getTime();
-
-    $("#chat-timestamp").append(time);
-    document.getElementById("userInput").scrollIntoView(false);
+    let firstMessage = "Hi! How can I help you today?";
+    const chatbox = document.getElementById("chatbox");
+    
+    if (chatbox) {
+        let botHtml = '<div class="botText"><span>' + firstMessage + '</span></div>';
+        $("#chatbox").append(botHtml);
+        
+        let time = getTime();
+        $("#chat-timestamp").append(time);
+        scrollToBottom();
+    }
 }
 
-firstBotMessage();
+// Typing Indicator Helpers
+function showTypingIndicator() {
+    $("#typing-indicator").css("display", "flex");
+    scrollToBottom();
+}
 
-// Retrieves the response
+function hideTypingIndicator() {
+    $("#typing-indicator").css("display", "none");
+}
+
+// Retrieves and renders bot response with typing delay
 function getHardResponse(userText) {
-    let botResponse = getBotResponse(userText);
-    let botHtml = '<p class="botText"><span>' + botResponse + '</span></p>';
-    $("#chatbox").append(botHtml);
-
-    document.getElementById("chat-bar-bottom").scrollIntoView(true);
+    showTypingIndicator();
+    
+    setTimeout(() => {
+        hideTypingIndicator();
+        let botResponse = getBotResponse(userText);
+        let botHtml = '<div class="botText"><span>' + botResponse + '</span></div>';
+        $("#chatbox").append(botHtml);
+        scrollToBottom();
+    }, 700);
 }
 
-//Gets the text text from the input box and processes it
+// Processes user text input
 function getResponse() {
-    let userText = $("#textInput").val();
+    let userText = $("#textInput").val().trim();
 
     if (userText == "") {
         userText = "Help";
     }
 
-    let userHtml = '<p class="userText"><span>' + userText + '</span></p>';
+    let userHtml = '<div class="userText"><span>' + userText + '</span></div>';
 
     $("#textInput").val("");
     $("#chatbox").append(userHtml);
-    document.getElementById("chat-bar-bottom").scrollIntoView(true);
+    scrollToBottom();
 
-    setTimeout(() => {
-        getHardResponse(userText);
-    }, 1000)
-
+    getHardResponse(userText);
 }
 
-// Handles sending text via button clicks
-function buttonSendText(sampleText) {
-    let userHtml = '<p class="userText"><span>' + sampleText + '</span></p>';
-
-    $("#textInput").val("");
+// Quick Chip / Hero Button Handler
+function quickSend(sampleText) {
+    const widget = document.getElementById("chat-widget");
+    if (widget && widget.classList.contains("closed")) {
+        toggleChat();
+    }
+    
+    let userHtml = '<div class="userText"><span>' + sampleText + '</span></div>';
     $("#chatbox").append(userHtml);
-    document.getElementById("chat-bar-bottom").scrollIntoView(true);
+    scrollToBottom();
 
+    getHardResponse(sampleText);
+}
+
+// Clear Chat History
+function clearChat() {
+    $("#chatbox").empty();
+    $("#chat-timestamp").empty();
+    firstBotMessage();
 }
 
 function sendButton() {
     getResponse();
 }
+
+// Initialize chat on document load
+$(document).ready(function () {
+    firstBotMessage();
+});
 
 // Press enter to send a message
 $("#textInput").keypress(function (e) {
@@ -97,4 +129,7 @@ $("#textInput").keypress(function (e) {
     }
 });
 
-module.exports = { getTime };
+// Browser Environment Guard
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = { getTime };
+}

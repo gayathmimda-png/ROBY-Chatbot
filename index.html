@@ -5,72 +5,103 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ROBY Chatbot</title>
+    <meta name="description" content="ROBY Chatbot - An AI based chatbot helper for educational resources in Web Design and Web Development.">
+    <title>ROBY Chatbot - AI Educational Helper</title>
 
-    <link rel="stylesheet" href="css/chat.css">
     <link rel="stylesheet" href="css/home.css">
+    <link rel="stylesheet" href="css/chat.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="shortcut icon" type="image/png" href="img/favicon.png"/>
-
-
 </head>
 
 <body>
-    <!--Left area-->
+    <!-- Left Hero Section -->
     <div class="left-box">
         <div class="roby-area">
-            <img src="img/robot.png" alt="">
+            <img src="img/robot.png" alt="ROBY AI Assistant Avatar">
         </div>
 
         <div class="text-area">
+            <div class="badge"><i class="fa fa-bolt"></i> AI Educational Assistant</div>
             <h2>Hello! I'm ROBY</h2>
-            <p>An Artificial Intelligence based chatbot for help you to find educational resources.</p>
+            <p>Your intelligent companion for discovering top-tier educational resources in Web Design & Web Development.</p>
+
+            <div class="hero-actions">
+                <button class="hero-btn" onclick="quickSend('Learn Web Design')"><i class="fa fa-paint-brush"></i> Web Design</button>
+                <button class="hero-btn" onclick="quickSend('Learn Web Development')"><i class="fa fa-code"></i> Web Development</button>
+            </div>
         </div>
     </div>
 
-    <!-- CHAT BAR BLOCK -->
-    <div class="chat-bar-collapsible">
-        <button id="chat-button" type="button" class="collapsible"> Let's chat with ROBY</button>
+    <!-- Chat Bar Collapsible Widget -->
+    <div class="chat-bar-collapsible" id="chat-widget">
+        <div class="collapsible-header" id="chat-button" onclick="toggleChat()">
+            <div class="header-left">
+                <div class="header-avatar">
+                    <img src="img/roby-img.png" alt="ROBY">
+                    <div class="status-dot"></div>
+                </div>
+                <div class="header-info">
+                    <h4>ROBY Chatbot</h4>
+                    <span><i class="fa fa-circle"></i> Online</span>
+                </div>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" title="Clear Conversation" onclick="event.stopPropagation(); clearChat();"><i class="fa fa-refresh"></i></button>
+                <button class="icon-btn" title="Toggle Chat" id="toggle-icon"><i class="fa fa-chevron-down"></i></button>
+            </div>
+        </div>
 
         <div class="content">
             <div class="full-chat-block">
                 <!-- Message Container -->
                 <div class="outer-container">
-                    <div class="chat-container">
-                        <!-- Messages -->
+                    <div class="chat-container" id="chat-scroll">
                         <div id="chatbox">
                             <h5 id="chat-timestamp"></h5>
-                            <p id="botStarterMessage" class="botText"><span>Loading...</span></p>
+                            <!-- Messages dynamically injected here -->
                         </div>
-
-                        <!-- User input box -->
-                        <div class="chat-bar-input-block">
-                            <div id="userInput">
-                                <input id="textInput" class="input-box" type="text" name="msg"
-                                    placeholder="Type a message">
-                                <p></p>
-                            </div>
-
-                            <div class="chat-bar-icons">
-                                <i id="chat-icon" style="color: #333;" class="fa fa-fw fa-send" onclick="sendButton()"></i>
-                            </div>
+                        <!-- Animated Typing Indicator -->
+                        <div class="typing-indicator" id="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
                         </div>
-
-                        <div id="chat-bar-bottom">
-                            <p></p>
-                        </div>
-
                     </div>
                 </div>
 
+                <!-- Quick Suggestion Chips -->
+                <div class="quick-chips-container">
+                    <button class="chip-btn" onclick="quickSend('Web Design')">🎨 Web Design</button>
+                    <button class="chip-btn" onclick="quickSend('Web Development')">💻 Web Dev</button>
+                    <button class="chip-btn" onclick="quickSend('Purpose of Education')">🎓 Purpose</button>
+                    <button class="chip-btn" onclick="quickSend('Earn Money Web Design')">💰 Earn Money</button>
+                    <button class="chip-btn" onclick="quickSend('Online Education')">🌐 Online Study</button>
+                </div>
+
+                <!-- User Input Box -->
+                <div class="chat-bar-input-block">
+                    <div id="userInput">
+                        <input id="textInput" class="input-box" type="text" name="msg"
+                            placeholder="Ask ROBY a question..." aria-label="Type your message">
+                    </div>
+
+                    <div class="chat-bar-icons">
+                        <button class="send-btn" id="chat-icon" onclick="sendButton()" aria-label="Send Message" tabindex="0">
+                            <i class="fa fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div id="chat-bar-bottom"></div>
             </div>
         </div>
-
     </div>
 
+    <!-- Scripts -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="scripts/responses.js"></script>
+    <script src="scripts/chat.js"></script>
 </body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="scripts/responses.js"></script>
-<script src="scripts/chat.js"></script>
 
 </html>
